@@ -1,6 +1,6 @@
 {
   "name": "@trackasia/polyline",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A utility for encoding and decoding Google Polylines.",
   "homepage": "https://github.com/track-asia/polyline",
   "repository": {
