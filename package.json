@@ -24,7 +24,7 @@
     "test": "mocha test/test.js"
   },
   "keywords": [
-    "track-asia",
+    "trackasia",
     "google",
     "polyline",
     "encode",
