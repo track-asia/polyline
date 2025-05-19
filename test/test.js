@@ -82,3 +82,76 @@ describe('Polyline', function () {
     ]);
   });
 });
+
+describe('GeoJSON encode/decode', function () {
+  it('should encode GeoJSON LineString to polyline', function () {
+    const geojson = {
+      type: 'LineString',
+      coordinates: [
+        [-120.2, 38.5],
+        [-120.95, 40.7],
+        [-126.453, 43.252],
+      ],
+    };
+    const encoded = polyline.encodeGeoJSON(geojson);
+    assert.strictEqual(encoded, '_p~iF~ps|U_ulLnnqC_mqNvxq`@');
+  });
+
+  it('should decode polyline to GeoJSON LineString', function () {
+    const polylineString = '_p~iF~ps|U_ulLnnqC_mqNvxq`@';
+    const geojson = polyline.decodeToGeoJSON(polylineString, 5, 'LineString');
+    assert.deepStrictEqual(geojson, {
+      type: 'LineString',
+      coordinates: [
+        [-120.2, 38.5],
+        [-120.95, 40.7],
+        [-126.453, 43.252],
+      ],
+    });
+  });
+
+  it('should encode GeoJSON Polygon to polyline (first ring)', function () {
+    const geojson = {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [0, 0],
+          [10, 10],
+          [20, 20],
+          [0, 0], // closed ring
+        ],
+      ],
+    };
+    // Polyline sẽ encode cả điểm đầu và cuối nếu khác nhau, nên kết quả sẽ dài hơn
+    const encoded = polyline.encodeGeoJSON(geojson);
+    // Tạo polyline từ các điểm, kể cả điểm đóng vòng
+    const expected = polyline.encode([
+      [0, 0],
+      [10, 10],
+      [20, 20],
+      [0, 0],
+    ]);
+    assert.strictEqual(encoded, expected);
+  });
+
+  it('should decode polyline to GeoJSON Polygon (first ring)', function () {
+    // Polyline không cần điểm đóng vòng, hàm decodeToGeoJSON sẽ tự thêm nếu thiếu
+    const polylineString = polyline.encode([
+      [0, 0],
+      [10, 10],
+      [20, 20],
+    ]);
+    const geojson = polyline.decodeToGeoJSON(polylineString, 5, 'Polygon');
+    assert.deepStrictEqual(geojson, {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [0, 0],
+          [10, 10],
+          [20, 20],
+          [0, 0], // điểm đóng vòng được thêm tự động
+        ],
+      ],
+    });
+  });
+});

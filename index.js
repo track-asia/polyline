@@ -103,9 +103,50 @@
     return coordinates;
   }
 
+  // Encode GeoJSON LineString or Polygon to polyline string (auto swap [lng,lat] -> [lat,lng])
+  function encodeGeoJSON(geojson, precision = 5) {
+    if (!geojson || !geojson.type) throw new Error('Invalid GeoJSON');
+    let coords;
+    if (geojson.type === 'LineString') {
+      coords = geojson.coordinates;
+    } else if (geojson.type === 'Polygon') {
+      coords = geojson.coordinates[0];
+    } else {
+      throw new Error('Only LineString and Polygon GeoJSON types are supported');
+    }
+    // Swap [lng,lat] -> [lat,lng] for polyline
+    const swapped = coords.map(pt => [pt[1], pt[0]]);
+    return encode(swapped, precision);
+  }
+
+  // Decode polyline string to GeoJSON LineString or Polygon (auto swap [lat,lng] -> [lng,lat])
+  function decodeToGeoJSON(polyline, precision = 5, type = 'LineString') {
+    // decode trả về [lat, lng], cần swap lại [lng, lat] cho GeoJSON
+    let coords = decode(polyline, precision).map(pt => [pt[1], pt[0]]);
+    if (type === 'LineString') {
+      return {
+        type: 'LineString',
+        coordinates: coords
+      };
+    } else if (type === 'Polygon') {
+      // Ensure first and last point are the same (closed ring)
+      const closed = coords.length > 0 && (coords[0][0] !== coords[coords.length-1][0] || coords[0][1] !== coords[coords.length-1][1])
+        ? [...coords, coords[0]]
+        : coords;
+      return {
+        type: 'Polygon',
+        coordinates: [closed]
+      };
+    } else {
+      throw new Error('Only LineString and Polygon GeoJSON types are supported');
+    }
+  }
+
   exports.encode = encode;
   exports.decode = decode;
   exports.encodeNumber = encodeNumber;
+  exports.encodeGeoJSON = encodeGeoJSON;
+  exports.decodeToGeoJSON = decodeToGeoJSON;
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = exports;
