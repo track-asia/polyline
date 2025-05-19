@@ -1,0 +1,42 @@
+{
+  "name": "@trackasia/polyline",
+  "version": "1.0.0",
+  "description": "A utility for encoding and decoding Google Polylines.",
+  "type": "module",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/track-asia/polyline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/track-asia/polyline/issues"
+  },
+  "homepage": "https://github.com/track-asia/polyline#readme",
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "keywords": [
+    "track-asia",
+    "google",
+    "polyline",
+    "encode",
+    "decode"
+  ],
+  "author": "TrackAsia",
+  "license": "MIT",
+  "module": "index.mjs",
+  "browser": "index.browser.js",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "import": "./index.mjs",
+      "browser": "./index.browser.js"
+    }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "mocha": "^11.3.0"
+  }
+}
