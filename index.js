@@ -103,7 +103,14 @@
     return coordinates;
   }
 
-  // Encode GeoJSON LineString or Polygon to polyline string (auto swap [lng,lat] -> [lat,lng])
+  /**
+   * Encodes a GeoJSON LineString or Polygon into a polyline string.
+   *
+   * @param {Object} geojson - The GeoJSON object to encode. Must be of type 'LineString' or 'Polygon'.
+   * @param {number} [precision=5] - The precision to use for encoding coordinates.
+   * @returns {string} The encoded polyline string.
+   * @throws {Error} If the GeoJSON is invalid or not a supported type.
+   */
   function encodeGeoJSON(geojson, precision = 5) {
     if (!geojson || !geojson.type) throw new Error('Invalid GeoJSON');
     let coords;
@@ -119,9 +126,17 @@
     return encode(swapped, precision);
   }
 
-  // Decode polyline string to GeoJSON LineString or Polygon (auto swap [lat,lng] -> [lng,lat])
+  /**
+   * Decodes a polyline string into a GeoJSON geometry object (LineString or Polygon).
+   *
+   * @param {string} polyline - The encoded polyline string.
+   * @param {number} [precision=5] - The precision factor used during encoding (default is 5).
+   * @param {'LineString'|'Polygon'} [type='LineString'] - The type of GeoJSON geometry to return.
+   * @returns {Object} A GeoJSON geometry object of the specified type with coordinates in [lng, lat] order.
+   * @throws {Error} Throws if the type is not 'LineString' or 'Polygon'.
+   */
   function decodeToGeoJSON(polyline, precision = 5, type = 'LineString') {
-    // decode trả về [lat, lng], cần swap lại [lng, lat] cho GeoJSON
+    // decode return [lat, lng], swap [lng, lat] for GeoJSON
     let coords = decode(polyline, precision).map(pt => [pt[1], pt[0]]);
     if (type === 'LineString') {
       return {
