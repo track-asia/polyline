@@ -41,10 +41,9 @@
   }
 
   /**
-   * Decodes a Polyline string into a list of coordinates.
-   * @param {string} polyline The Polyline string.
-   * @param {number} precision The precision of the decoding (default: 5).
-   * @returns {Array<[number, number]>} Array of coordinate pairs (lat, lng).
+   * Encodes a signed integer using the polyline algorithm.
+   * @param {number} num - The value to encode.
+   * @returns {string} Encoded string fragment.
    */
   function encodeNumber(num) {
     let encoded = '';
